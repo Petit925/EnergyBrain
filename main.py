@@ -1,9 +1,9 @@
 import os
 import fitz  # PyMuPDF
 import tiktoken
+import pinecone
 from dotenv import load_dotenv
 from openai import OpenAI
-from pinecone import Pinecone
 
 # Завантаження ключів
 load_dotenv()
@@ -14,8 +14,8 @@ PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 
 # Ініціалізація клієнтів
 client = OpenAI(api_key=OPENAI_API_KEY)
-pc = Pinecone(api_key=PINECONE_API_KEY)
-index = pc.Index(PINECONE_INDEX_NAME)
+pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
+index = pinecone.Index(PINECONE_INDEX_NAME)
 
 # Завантаження PDF і розбиття на чанки
 def load_pdf_text(path):
@@ -45,18 +45,18 @@ def upload_to_pinecone(embeddings):
         {"id": f"chunk-{i}", "values": embedding, "metadata": {"text": chunk}}
         for i, (chunk, embedding) in enumerate(embeddings)
     ]
-    index.upsert(vectors=vectors)
+    index.upsert(vectors)
 
 # Пошук
 def search_index(query, top_k=5):
     res = client.embeddings.create(input=[query], model="text-embedding-ada-002")
     query_embed = res.data[0].embedding
     result = index.query(vector=query_embed, top_k=top_k, include_metadata=True)
-    return result['matches']
+    return result.matches
 
 # Побудова prompt і GPT-відповідь
 def build_prompt(query, results):
-    context = "\n---\n".join([r["metadata"]["text"] for r in results])
+    context = "\n---\n".join([r.metadata["text"] for r in results])
     return f"""
 Ти експерт з комплаєнсу. Відповідай коротко, чітко, тільки на основі наданого контексту.
 
@@ -73,29 +73,3 @@ def ask_gpt(prompt):
         messages=[{"role": "user", "content": prompt}]
     )
     return response.choices[0].message.content
-
-# Основний скрипт
-def main():
-    pdf_path = "compliance_manual.pdf"  # Назва твого PDF-файлу
-
-    print("🔍 Завантаження документа...")
-    full_text = load_pdf_text(pdf_path)
-    chunks = chunk_text(full_text)
-    
-    print(f"🔗 Створено {len(chunks)} чанків. Генерація ембедінгів...")
-    embeddings = embed_texts(chunks)
-
-    print("⬆️ Завантаження у Pinecone...")
-    upload_to_pinecone(embeddings)
-
-    while True:
-        query = input("\n📝 Введіть запит (або 'exit'): ")
-        if query.lower() == 'exit':
-            break
-        matches = search_index(query)
-        prompt = build_prompt(query, matches)
-        response = ask_gpt(prompt)
-        print(f"\n💡 GPT-відповідь:\n{response}")
-
-if __name__ == "__main__":
-    main()
