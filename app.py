@@ -10,33 +10,28 @@ st.caption("(Compliance Assistant)")
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Форма для запиту
-with st.form("chat_form"):
-    st.markdown("💬 **Введіть свій запит, щодо проходження комплаєнсу у iC consulenten:**")
-    query = st.text_input("Що вас цікавить?", label_visibility="collapsed")
-    submitted = st.form_submit_button("Запитати")
-
-# Після надсилання запиту
-if submitted and query:
-    matches = search_index(query)
-    prompt = build_prompt(query, matches)
-    response = ask_gpt(prompt)
-
-    st.session_state.chat_history.append({
-        "question": query,
-        "answer": response
-    })
-
-    st.rerun()
-
-# Виведення історії чату
+# Виведення всієї історії чату
 for chat in st.session_state.chat_history:
     with st.chat_message("user"):
         st.write(chat["question"])
     with st.chat_message("assistant"):
         st.success(chat["answer"])
 
-# Кнопка очистки чату
+# Поле вводу в самому низу
+if prompt := st.chat_input("Введіть запит, щодо проходження комплаєнсу у iC consulenten:"):
+    matches = search_index(prompt)
+    final_prompt = build_prompt(prompt, matches)
+    response = ask_gpt(final_prompt)
+
+    # Додати до історії
+    st.session_state.chat_history.append({
+        "question": prompt,
+        "answer": response
+    })
+
+    # Ререндер (автоматичний у chat_input, rerun не потрібен)
+
+# Кнопка для очистки чату
 if st.button("🧹 Очистити чат"):
     st.session_state.chat_history = []
     st.rerun()
