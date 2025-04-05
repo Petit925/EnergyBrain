@@ -1,6 +1,5 @@
 streamlit
 openai
-pinecone-client==2.2.4
-tiktoken
+pinecone-client
 PyMuPDF
-python-dotenv
+tiktoken
