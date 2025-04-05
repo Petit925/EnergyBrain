@@ -1,5 +1,5 @@
 import streamlit as st
-from main import load_pdf_text, chunk_text, embed_texts, upload_to_pinecone, search_index, build_prompt, ask_gpt, get_pdf_hash, index
+from main import load_pdf_text, chunk_text, embed_texts, upload_to_pinecone, search_index, build_prompt, ask_gpt, index
 
 st.set_page_config(page_title="📄 Комплаєнс-асистент", layout="wide")
 
