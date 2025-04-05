@@ -1,20 +1,13 @@
-import os
 import fitz  # PyMuPDF
 import tiktoken
 import streamlit as st
-from dotenv import load_dotenv
 from openai import OpenAI
-import pinecone
+from pinecone import Pinecone
 
-# Ініціалізація OpenAI
+# Ініціалізація клієнтів
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-
-# Ініціалізація Pinecone
-pinecone.init(
-    api_key=st.secrets["PINECONE_API_KEY"],
-    environment=st.secrets["PINECONE_ENVIRONMENT"]
-)
-index = pinecone.Index(st.secrets["PINECONE_INDEX_NAME"])
+pc = Pinecone(api_key=st.secrets["PINECONE_API_KEY"])
+index = pc.Index(st.secrets["PINECONE_INDEX_NAME"])
 
 def load_pdf_text(path):
     doc = fitz.open(path)
