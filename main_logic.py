@@ -2,7 +2,7 @@ import fitz  # PyMuPDF
 import tiktoken
 import streamlit as st
 from openai import OpenAI
-import pinecone
+from pinecone import Pinecone
 
 # Ініціалізація OpenAI та Pinecone
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
