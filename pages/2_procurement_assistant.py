@@ -2,7 +2,6 @@ import streamlit as st
 from main_logic import search_index, build_prompt, ask_gpt
 
 st.set_page_config(page_title="Асистент по закупівлям НЕФКО", page_icon="📑")
-
 st.title("📑 Асистент по закупівлям НЕФКО")
 st.caption("(NEFCO Procurement Assistant)")
 
