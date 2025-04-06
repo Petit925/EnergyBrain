@@ -2,7 +2,7 @@ import streamlit as st
 from main_logic import search_index, build_prompt, ask_gpt
 
 st.set_page_config(page_title="Асистент по комплаєнсу iC", page_icon="📄")
-st.title("📄 Асистент по комплаєнсу iC consulenten")
+st.title("📄 Ви в асистенті по комплаєнсу!")
 st.caption("(Compliance Assistant)")
 
 if "messages" not in st.session_state:
