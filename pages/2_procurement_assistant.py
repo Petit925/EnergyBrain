@@ -25,7 +25,11 @@ if query:
 
     with st.chat_message("assistant"):
         try:
-            matches = search_index(query, index_name="energybrain-index", source_filter="procurement")
+            matches = search_index(
+                query,
+                index_name="energybrain-index",
+                source_filter="procurement"
+            )
             prompt = build_prompt(query, matches)
             response = ask_gpt(prompt)
             st.markdown(response)
