@@ -8,7 +8,7 @@ st.write("Utilize artificial intelligence to assist with the planning, managemen
 st.markdown("## Виберіть помічника:")
 
 if st.button("📄 Асистент по комплаєнсу iC consulenten"):
-    st.switch_page("app_compliance.py")
+    st.markdown("[Перейти до Асистента по комплаєнсу](./app_compliance)")
 
 if st.button("📑 Асистент по закупівлям НЕФКО"):
-    st.switch_page("app_procurement.py")
+    st.markdown("[Перейти до Асистента по закупівлям](./app_procurement)")
