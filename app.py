@@ -7,5 +7,6 @@ st.write("Utilize artificial intelligence to assist with the planning, managemen
 
 st.markdown("### Виберіть помічника:")
 
-st.page_link("pages/1_Асистент_комплаєнс.py", label="📄 Асистент по комплаєнсу iC consulenten", icon="📄")
-st.page_link("pages/2_Асистент_НЕФКО.py", label="📑 Асистент по закупівлям НЕФКО", icon="📑")
+# Назви тут мають відповідати тому, що Streamlit сам витягне з імені файлу!
+st.page_link("1_compliance_assistant", label="📄 Асистент по комплаєнсу iC consulenten")
+st.page_link("2_procurement_assistant", label="📑 Асистент по закупівлям НЕФКО")
