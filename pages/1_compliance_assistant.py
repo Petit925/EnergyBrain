@@ -25,7 +25,7 @@ if query:
 
     with st.chat_message("assistant"):
         try:
-            matches = search_index(query, index_name="compliance-index")
+            matches = search_index(query, index_name="energybrain-index")
             prompt = build_prompt(query, matches)
             response = ask_gpt(prompt)
             st.markdown(response)
