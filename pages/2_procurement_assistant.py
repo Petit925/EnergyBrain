@@ -12,7 +12,7 @@ if "messages" not in st.session_state:
 # Кнопка очищення
 if st.button("🧹 Очистити чат"):
     st.session_state.messages = []
-    st.rerun()  # ← ось так тепер
+    st.rerun()
 
 # Вивід попередніх повідомлень
 for msg in st.session_state.messages:
@@ -29,4 +29,12 @@ if query:
 
     with st.chat_message("assistant"):
         try:
-            matches = search_index(query, index_name
+            matches = search_index(query, index_name="energybrain-index")
+            prompt = build_prompt(query, matches)
+            response = ask_gpt(prompt)
+            st.markdown(response)
+        except Exception as e:
+            response = "⚠️ Виникла помилка. Перевір API-ключі та з'єднання з Pinecone/OpenAI."
+            st.error(str(e))
+
+    st.session_state.messages.append({"role": "assistant", "content": response})
