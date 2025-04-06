@@ -2,11 +2,11 @@ import fitz  # PyMuPDF
 import tiktoken
 import streamlit as st
 from openai import OpenAI
-from pinecone import Pinecone
+import pinecone
 
-# ---------- Ініціалізація ----------
+# Ініціалізація OpenAI та Pinecone
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-pc = Pinecone(api_key=st.secrets["PINECONE_API_KEY"])
+pinecone.init(api_key=st.secrets["PINECONE_API_KEY"], environment=st.secrets["PINECONE_ENVIRONMENT"])
 
 # ---------- Робота з PDF ----------
 def load_pdf_text(path):
@@ -30,7 +30,7 @@ def embed_texts(texts):
 
 # ---------- Завантаження у Pinecone ----------
 def upload_to_pinecone(embeddings, index_name):
-    index = pc.Index(index_name)
+    index = pinecone.Index(index_name)
     vectors = [
         {
             "id": f"chunk-{i}",
@@ -42,14 +42,23 @@ def upload_to_pinecone(embeddings, index_name):
     index.upsert(vectors=vectors)
 
 # ---------- Пошук у Pinecone ----------
-def search_index(query, top_k=5, index_name=None):
+def search_index(query, top_k=5, index_name=None, source_filter=None):
     if not index_name:
         index_name = st.secrets["PINECONE_INDEX_NAME"]
-    index = pc.Index(index_name)
+    index = pinecone.Index(index_name)
+
     res = client.embeddings.create(input=[query], model="text-embedding-ada-002")
     query_embed = res.data[0].embedding
-    result = index.query(vector=query_embed, top_k=top_k, include_metadata=True)
-    return result["matches"]
+
+    filter_dict = {"source": source_filter} if source_filter else None
+
+    results = index.query(
+        vector=query_embed,
+        top_k=top_k,
+        include_metadata=True,
+        filter=filter_dict
+    )
+    return results["matches"]
 
 # ---------- Побудова запиту для GPT ----------
 def build_prompt(query, results):
