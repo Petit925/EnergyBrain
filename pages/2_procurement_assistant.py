@@ -12,7 +12,7 @@ if "messages" not in st.session_state:
 # Кнопка очищення
 if st.button("🧹 Очистити чат"):
     st.session_state.messages = []
-    st.experimental_rerun()
+    st.rerun()  # ← ось так тепер
 
 # Вивід попередніх повідомлень
 for msg in st.session_state.messages:
