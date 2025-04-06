@@ -1,5 +1,5 @@
 import streamlit as st
-from main import search_index, build_prompt, ask_gpt
+from main_logic import search_index, build_prompt, ask_gpt
 
 st.set_page_config(page_title="Асистент по комплаєнсу iC", page_icon="📄")
 
