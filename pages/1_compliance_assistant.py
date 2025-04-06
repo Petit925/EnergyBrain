@@ -10,7 +10,7 @@ if "messages" not in st.session_state:
 
 if st.button("🧹 Очистити чат"):
     st.session_state.messages = []
-    st.experimental_rerun()
+    st.rerun()  # ← ось так тепер
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
