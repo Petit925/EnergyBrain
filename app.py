@@ -7,7 +7,6 @@ st.write("Utilize artificial intelligence to assist with the planning, managemen
 
 st.markdown("### Виберіть помічника:")
 
-# Посилання на внутрішні сторінки з каталогу `pages/`
-st.markdown("[📄 Асистент по комплаєнсу iC consulenten](./1_compliance_assistant)")
-st.markdown("[📑 Асистент по закупівлям НЕФКО](./2_procurement_assistant)")
-
+# Використання вбудованих page links
+st.page_link("pages/1_compliance_assistant.py", label="📄 Асистент по комплаєнсу iC consulenten")
+st.page_link("pages/2_procurement_assistant.py", label="📑 Асистент по закупівлям НЕФКО")
