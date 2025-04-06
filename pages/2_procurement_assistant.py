@@ -5,21 +5,17 @@ st.set_page_config(page_title="Асистент по закупівлям НЕФ
 st.title("📑 Ви в асистенті по закупівлям НЕФКО!")
 st.caption("(NEFCO Procurement Assistant)")
 
-# Стан чату
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Кнопка очищення
 if st.button("🧹 Очистити чат"):
     st.session_state.messages = []
     st.rerun()
 
-# Вивід попередніх повідомлень
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# Чат-ввід
 query = st.chat_input("Введіть запит, щодо закупівель у проектах НЕФКО:")
 
 if query:
@@ -29,7 +25,7 @@ if query:
 
     with st.chat_message("assistant"):
         try:
-            matches = search_index(query, index_name="energybrain-index")
+            matches = search_index(query, index_name="energybrain-index", source_filter="procurement")
             prompt = build_prompt(query, matches)
             response = ask_gpt(prompt)
             st.markdown(response)
