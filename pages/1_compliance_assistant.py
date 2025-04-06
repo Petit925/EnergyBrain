@@ -10,7 +10,7 @@ if "messages" not in st.session_state:
 
 if st.button("🧹 Очистити чат"):
     st.session_state.messages = []
-    st.rerun()  # ← ось так тепер
+    st.rerun()
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
@@ -25,7 +25,7 @@ if query:
 
     with st.chat_message("assistant"):
         try:
-            matches = search_index(query, index_name="energybrain-index")
+            matches = search_index(query, index_name="energybrain-index", source_filter="compliance")
             prompt = build_prompt(query, matches)
             response = ask_gpt(prompt)
             st.markdown(response)
